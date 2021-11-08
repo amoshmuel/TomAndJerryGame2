@@ -3,6 +3,7 @@ package com.example.tomandjerrygame;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,8 +24,13 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btn_right;
     private Timer timer = new Timer();
     private int clock = 1;
-    private int  playerPosition =0;
+    private int  playerPosition =1;
     int flag = 1; //1 = first open
+    final int DELAY = 2000;
+    final Handler handler = new Handler();
+    private Runnable timerRunnable;
+
+
 
 
     @Override
@@ -46,11 +52,18 @@ public class MainActivity extends AppCompatActivity {
                 vals[i][j] = 0;
             }
         }
+
         initViews();
-        checkCrash();
-        runlogic();
-        updateUI();
+//check it
+        timerRunnable = () -> {
+            updateClockView();
+            handler.postDelayed(timerRunnable, DELAY);
+        };
     }
+
+
+
+
 
     private void initViews() {
         btn_right.setOnClickListener(new View.OnClickListener() {
@@ -160,36 +173,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void stopTicker() {
-        timer.cancel();
+        handler.removeCallbacks(timerRunnable);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        updateUI();
+        startTicker();
+//        updateUI();
     }
 
     private void updateUI() {
-        startTicker();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                int countA = 0;
-                int countB = 0;
                 for (int i = 0; i < path.length; i++) {
                     for (int j = 0; j < path[i].length; j++) {
                         ImageView im = path[i][j];
-                        switch (vals[i][j]){
-                            case 0:
-                                countA++;
-                                im.setVisibility(View.INVISIBLE);
-                                Log.d("pttt","countA:"+countA);
-
-                            case 1:
-                                countB++;
-                                im.setVisibility(View.VISIBLE);
-                                im.setImageResource(R.drawable.img_tom);
-                                Log.d("pttt","countB:"+countB);
+                        if(vals[i][j] == 0){
+                            path[i][j].setVisibility(View.INVISIBLE);
+                        }else if (vals[i][j] == 1){
+                            path[i][j].setVisibility(View.VISIBLE);
+                            path[i][j].setImageResource(R.drawable.img_tom);
                         }
                     }
                 }
@@ -198,22 +203,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startTicker() {
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateClockView();
-                    }
-                });
-            }
-        }, 0, 2000);
+        handler.postDelayed(timerRunnable, DELAY);
     }
 
     private void updateClockView() {
         //update every 2 sec the matrix.
+        checkCrash();
+        runlogic();
+        updateUI();
+        moveForward();
+    }
+
+    private void moveForward() {
         for (int i = vals.length - 1; i >= 0; i--) {
             for (int j = 0; j < vals[i].length; j++){
                 if(i > 0){
