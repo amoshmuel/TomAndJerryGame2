@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         btn_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                vibrate(20);
                 if (playerPosition == 0) {//player on the left move to mid
                     player[0].setVisibility(View.INVISIBLE);
                     player[1].setImageResource(R.drawable.img_jerry);
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         btn_left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                vibrate(20);
                 if (playerPosition == 2) {//player on the right move to mid
                     player[2].setVisibility(View.INVISIBLE);
                     player[1].setImageResource(R.drawable.img_jerry);
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     if(live[j].getVisibility() == View.VISIBLE){
                         live[j].setVisibility(View.INVISIBLE);
                         Toast.makeText(MainActivity.this, "HIT!", Toast.LENGTH_SHORT).show();
-                        vibrate();
+                        vibrate(VIBRATE_TIME);
                         return;
                     }else if (live[0].getVisibility() == View.INVISIBLE){
                         stopTicker();
@@ -138,27 +140,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void vibrate() {
+    private void vibrate(int timer) {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(VIBRATE_TIME, VibrationEffect.DEFAULT_AMPLITUDE));
         } else {
-            //deprecated in API 26
-            v.vibrate(VIBRATE_TIME);
+            v.vibrate(timer);
         }
     }
 
 
     private void runlogic() {
         if(counter++ %2 == 0){
-            for (int j = 0; j < vals[0].length; j++) {
-                if(j == 0) {
-                    vals[0][j] = 1;
-                } else {
-                    vals[0][j] = 0;
-                }
-            }
-            shuffleArray(vals);
+            Random r = new Random();
+            vals[0][r.nextInt(vals[0].length)] =1 ;
+//            for (int j = 0; j < vals[0].length; j++) {
+//                if(j == 0) {
+//                    vals[0][j] = 1;
+//                } else {
+//                    vals[0][j] = 0;
+//                }
+//            }
+//            shuffleArray(vals);
         }else {
             for (int j = 0; j < vals[0].length; j++) {
                 vals[0][j] = 0;
