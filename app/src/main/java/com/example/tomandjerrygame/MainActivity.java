@@ -228,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
         runlogic();
         updateUI();
         moveForward();
+
     }
 
     private void moveForward() {
