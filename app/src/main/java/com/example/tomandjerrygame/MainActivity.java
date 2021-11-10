@@ -1,6 +1,7 @@
 package com.example.tomandjerrygame;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private int counter = 0;
     private boolean flag = true;
     private ImageView panel_img_background;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
