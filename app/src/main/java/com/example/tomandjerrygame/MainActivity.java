@@ -20,11 +20,12 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btn_left;
     private ImageButton btn_right;
     private int  playerPosition =1;
-    final int DELAY = 1000;
-    final Handler handler = new Handler();
+    private final int DELAY = 1000;
+    private final Handler handler = new Handler();
     private Runnable timerRunnable;
     private final int VIBRATE_TIME = 500;
-    int counter = 0;
+    private int counter = 0;
+    private boolean flag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,12 @@ public class MainActivity extends AppCompatActivity {
         initViews();
 
         timerRunnable = () -> {
-            updateClockView();
-            handler.postDelayed(timerRunnable, DELAY);
+            if(flag == true){
+                updateClockView();
+                handler.postDelayed(timerRunnable, DELAY);
+            }else{
+                stopTicker();
+            }
         };
     }
 
@@ -128,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "HIT!", Toast.LENGTH_SHORT).show();
                     }else {
                         Toast.makeText(MainActivity.this, "Game Over", Toast.LENGTH_SHORT).show();
-                        stopTicker();
+                        flag = false;
                     }
                     vibrate(VIBRATE_TIME);
                     return;
