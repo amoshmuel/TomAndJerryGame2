@@ -1,7 +1,5 @@
 package com.example.tomandjerrygame;
 import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +10,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -127,15 +124,19 @@ public class MainActivity extends AppCompatActivity {
             for (int j = panel_img_live.length - 1; j >= 0; j--) {
                 if(panel_img_live[j].getVisibility() == View.VISIBLE){
                     panel_img_live[j].setVisibility(View.INVISIBLE);
-                    Toast.makeText(MainActivity.this, "HIT!", Toast.LENGTH_SHORT).show();
+                    if(j != 0 ){
+                        Toast.makeText(MainActivity.this, "HIT!", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(MainActivity.this, "Game Over", Toast.LENGTH_SHORT).show();
+                        stopTicker();
+                    }
                     vibrate(VIBRATE_TIME);
                     return;
-                }if (panel_img_live[0].getVisibility() == View.INVISIBLE){
-                    stopTicker();
                 }
             }
         }
     }
+
 
 
     private void vibrate(int timer) {
