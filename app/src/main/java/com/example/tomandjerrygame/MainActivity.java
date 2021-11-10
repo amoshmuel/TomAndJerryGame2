@@ -181,7 +181,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void runlogic() {
-//        every 2 row initial random num 1 in the matrix an the other is 0 (the num 1 will swap to an obstacle)
+//        every 2 row initial the first row with only 1 number and the other row is initial with 0.
+//        the location of the 1 in the row is random. in the matrix an the other is 0 (the num 1 will swap to an obstacle)
         if(counter++ %2 == 0){
             Random r = new Random();
             vals_matrix_loc[0][r.nextInt(vals_matrix_loc[0].length)] =1 ;
@@ -236,7 +237,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateClockView() {
-        //update every 2 sec the matrix.
+//        every 2 sec check if was a crash, initial random 1 in the first row
+//        swap the 1 to an obstacle and move down the obstacle.
         checkCrash();
         runlogic();
         updateUI();
