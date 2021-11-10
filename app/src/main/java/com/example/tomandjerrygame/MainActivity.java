@@ -17,9 +17,9 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private ImageView[][] panel_img_obstacle;
-    private int[][] vals;
-    private ImageView [] player;
-    private ImageView [] live;
+    private int[][] vals_matrix_loc;
+    private ImageView [] panel_img_player;
+    private ImageView [] panel_img_live;
     private ImageButton btn_left;
     private ImageButton btn_right;
     private int  playerPosition =1;
@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         findViews();
-        for (int i = 0; i < vals.length; i++) {
-            for (int j = 0; j < vals[i].length; j++) {
-                vals[i][j] = 0;
+        for (int i = 0; i < vals_matrix_loc.length; i++) {
+            for (int j = 0; j < vals_matrix_loc[i].length; j++) {
+                vals_matrix_loc[i][j] = 0;
             }
         }
         initViews();
@@ -56,21 +56,14 @@ public class MainActivity extends AppCompatActivity {
         btn_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                vibrate(20);
                 if (playerPosition == 0) {//player on the left move to mid
-                    player[0].setVisibility(View.INVISIBLE);
-                    player[1].setImageResource(R.drawable.img_jerry);
-                    player[1].setVisibility(View.VISIBLE);
-                    playerPosition = 1;
+                    setVisibleFromTo(panel_img_player,0,1);
+
                 } else if (playerPosition == 1) {//player on the mid move to right
-                    player[1].setVisibility(View.INVISIBLE);
-                    player[2].setImageResource(R.drawable.img_jerry);
-                    player[2].setVisibility(View.VISIBLE);
-                    playerPosition = 2;
+                    setVisibleFromTo(panel_img_player,1,2);
+
                 } else if (playerPosition == 2) { //player on the right cant move
-                    player[2].setImageResource(R.drawable.img_jerry);
-                    player[2].setVisibility(View.VISIBLE);
-                    playerPosition = 2;
+                    setVisibleFromTo(panel_img_player,2,2);
                 }
             }
         });
@@ -78,25 +71,29 @@ public class MainActivity extends AppCompatActivity {
         btn_left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                vibrate(20);
                 if (playerPosition == 2) {//player on the right move to mid
-                    player[2].setVisibility(View.INVISIBLE);
-                    player[1].setImageResource(R.drawable.img_jerry);
-                    player[1].setVisibility(View.VISIBLE);
-                    playerPosition = 1;
+                    setVisibleFromTo(panel_img_player,2,1);
+
                 } else if (playerPosition == 1) {//player on the mid move to left
-                    player[1].setVisibility(View.INVISIBLE);
-                    player[0].setImageResource(R.drawable.img_jerry);
-                    player[0].setVisibility(View.VISIBLE);
-                    playerPosition = 0;
+                    setVisibleFromTo(panel_img_player,1,0);
+
                 } else if (playerPosition == 0) { //player on the right cant move
-                    player[0].setImageResource(R.drawable.img_jerry);
-                    player[0].setVisibility(View.VISIBLE);
-                    playerPosition = 0;
+                    setVisibleFromTo(panel_img_player,0,0);
                 }
             }
         });
     }
+
+    private void setVisibleFromTo(ImageView [] player ,int from, int to) {
+//        move the player from current location to new location
+        if(to != from){
+            player[from].setVisibility(View.INVISIBLE);
+        }
+        player[to].setImageResource(R.drawable.img_jerry);
+        player[to].setVisibility(View.VISIBLE);
+        playerPosition = to;
+    }
+
 
     private void findViews() {
         panel_img_obstacle = new ImageView[][]{
@@ -106,13 +103,13 @@ public class MainActivity extends AppCompatActivity {
                 {findViewById(R.id.panel_img_tom_30), findViewById(R.id.panel_img_tom_31), findViewById(R.id.panel_img_tom_32)},
                 {findViewById(R.id.panel_img_jerry0), findViewById(R.id.panel_img_jerry1), findViewById(R.id.panel_img_jerry2)}
         };
-        vals = new int[panel_img_obstacle.length][panel_img_obstacle[0].length];
-        player = new ImageView[]{
+        vals_matrix_loc = new int[panel_img_obstacle.length][panel_img_obstacle[0].length];
+        panel_img_player = new ImageView[]{
                 findViewById(R.id.panel_img_jerry0),
                 findViewById(R.id.panel_img_jerry1),
                 findViewById(R.id.panel_img_jerry2)
         };
-        live = new ImageView[]{
+        panel_img_live = new ImageView[]{
                 findViewById(R.id.panel_img_chesse1),
                 findViewById(R.id.panel_img_chesse2),
                 findViewById(R.id.panel_img_chesse3)
@@ -124,21 +121,22 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void checkCrash() {
-        for (int i = 0; i < vals[vals.length - 1].length; i++) {
-            if(vals[vals.length- 1][i] == 1 && playerPosition == i){
-                for (int j = live.length - 1; j >= 0; j--) {
-                    if(live[j].getVisibility() == View.VISIBLE){
-                        live[j].setVisibility(View.INVISIBLE);
-                        Toast.makeText(MainActivity.this, "HIT!", Toast.LENGTH_SHORT).show();
-                        vibrate(VIBRATE_TIME);
-                        return;
-                    }else if (live[0].getVisibility() == View.INVISIBLE){
-                        stopTicker();
-                    }
+        //        check if was an object on the player postion.
+        //        and remove the last cheese-live from the array.
+        if(vals_matrix_loc[vals_matrix_loc.length- 1][playerPosition] == 1){
+            for (int j = panel_img_live.length - 1; j >= 0; j--) {
+                if(panel_img_live[j].getVisibility() == View.VISIBLE){
+                    panel_img_live[j].setVisibility(View.INVISIBLE);
+                    Toast.makeText(MainActivity.this, "HIT!", Toast.LENGTH_SHORT).show();
+                    vibrate(VIBRATE_TIME);
+                    return;
+                }if (panel_img_live[0].getVisibility() == View.INVISIBLE){
+                    stopTicker();
                 }
             }
         }
     }
+
 
     private void vibrate(int timer) {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -153,33 +151,13 @@ public class MainActivity extends AppCompatActivity {
     private void runlogic() {
         if(counter++ %2 == 0){
             Random r = new Random();
-            vals[0][r.nextInt(vals[0].length)] =1 ;
-//            for (int j = 0; j < vals[0].length; j++) {
-//                if(j == 0) {
-//                    vals[0][j] = 1;
-//                } else {
-//                    vals[0][j] = 0;
-//                }
-//            }
-//            shuffleArray(vals);
+            vals_matrix_loc[0][r.nextInt(vals_matrix_loc[0].length)] =1 ;
         }else {
-            for (int j = 0; j < vals[0].length; j++) {
-                vals[0][j] = 0;
+            for (int j = 0; j < vals_matrix_loc[0].length; j++) {
+                vals_matrix_loc[0][j] = 0;
             }
         }
     }
-
-    private void shuffleArray(int[][] vals) {
-        Random rand = new Random();
-        for (int i = 0; i < vals[0].length; i++) {
-            int randomIndexToSwap = rand.nextInt(vals[0].length);
-            int temp = vals[0][randomIndexToSwap];
-            vals[0][randomIndexToSwap] = vals[0][i];
-            vals[0][i] = temp;
-        }
-    }
-
-
 
     @Override
     protected void onStop() {
@@ -205,15 +183,13 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < panel_img_obstacle.length; i++) {
                     for (int j = 0; j < panel_img_obstacle[i].length; j++) {
                         ImageView im = panel_img_obstacle[i][j];
-                        if(vals[i][j] == 0){
+                        if(vals_matrix_loc[i][j] == 0){
                             panel_img_obstacle[i][j].setVisibility(View.INVISIBLE);
-                            player[playerPosition].setImageResource(R.drawable.img_jerry);
-                            player[playerPosition].setVisibility(View.VISIBLE);
-                        }else if (vals[i][j] == 1){
+                            setVisibleFromTo(panel_img_player,playerPosition,playerPosition);
+                        }else if (vals_matrix_loc[i][j] == 1){
                             panel_img_obstacle[i][j].setVisibility(View.VISIBLE);
                             panel_img_obstacle[i][j].setImageResource(R.drawable.img_tom);
-                            player[playerPosition].setImageResource(R.drawable.img_jerry);
-                            player[playerPosition].setVisibility(View.VISIBLE);
+                            setVisibleFromTo(panel_img_player,playerPosition,playerPosition);
                         }
                     }
                 }
@@ -235,10 +211,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void moveForward() {
-        for (int i = vals.length - 1; i >= 0; i--) {
-            for (int j = 0; j < vals[i].length; j++){
+        for (int i = vals_matrix_loc.length - 1; i >= 0; i--) {
+            for (int j = 0; j < vals_matrix_loc[i].length; j++){
                 if(i > 0){
-                    vals[i][j] = vals[i-1][j];
+                    vals_matrix_loc[i][j] = vals_matrix_loc[i-1][j];
                 }
             }
         }
