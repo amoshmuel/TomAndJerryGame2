@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private final int VIBRATE_TIME = 500;
     private int counter = 0;
     private boolean flag = true;
+    private ImageView panel_img_background;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +47,23 @@ public class MainActivity extends AppCompatActivity {
                 handler.postDelayed(timerRunnable, DELAY);
             }else{
                 stopTicker();
+                cleanUI();
+                panel_img_background.setImageResource(R.drawable.img_game_over);
             }
         };
     }
 
-
-
+    private void cleanUI() {
+        for (int i = 0; i < panel_img_obstacle.length; i++) {
+            for (int j = 0; j < panel_img_obstacle[i].length; j++) {
+                if(panel_img_obstacle[i][j].getVisibility() == View.VISIBLE)
+                    panel_img_obstacle[i][j].setVisibility(View.INVISIBLE);
+            }
+        }
+        btn_left.setVisibility(View.INVISIBLE);
+        btn_right.setVisibility(View.INVISIBLE);
+        panel_img_player[playerPosition].setVisibility(View.INVISIBLE);
+    }
 
 
     private void initViews() {
@@ -98,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void findViews() {
+        panel_img_background = findViewById(R.id.img_back);
         panel_img_obstacle = new ImageView[][]{
                 {findViewById(R.id.panel_img_tom_00), findViewById(R.id.panel_img_tom_01), findViewById(R.id.panel_img_tom_02)},
                 {findViewById(R.id.panel_img_tom_10), findViewById(R.id.panel_img_tom_11), findViewById(R.id.panel_img_tom_12)},
@@ -129,6 +142,8 @@ public class MainActivity extends AppCompatActivity {
             for (int j = panel_img_live.length - 1; j >= 0; j--) {
                 if(panel_img_live[j].getVisibility() == View.VISIBLE){
                     panel_img_live[j].setVisibility(View.INVISIBLE);
+                    panel_img_player[playerPosition].setImageResource(R.drawable.img_jerry_angry);
+                    panel_img_player[playerPosition].setVisibility(View.VISIBLE);
                     if(j != 0 ){
                         Toast.makeText(MainActivity.this, "HIT!", Toast.LENGTH_SHORT).show();
                     }else {
