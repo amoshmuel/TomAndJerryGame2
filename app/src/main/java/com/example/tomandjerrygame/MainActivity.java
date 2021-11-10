@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initialMatrix() {
+//        initial the matrix to 0
         for (int i = 0; i < vals_matrix_loc.length; i++) {
             for (int j = 0; j < vals_matrix_loc[i].length; j++) {
                 vals_matrix_loc[i][j] = 0;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void cleanUI() {
+//        clear the UI before finish the game
         for (int i = 0; i < panel_img_obstacle.length; i++) {
             for (int j = 0; j < panel_img_obstacle[i].length; j++) {
                 if(panel_img_obstacle[i][j].getVisibility() == View.VISIBLE)
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initViews() {
+//        remove the player
         btn_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void vibrate(int timer) {
+//        making vibrate after hit
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(VIBRATE_TIME, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -177,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void runlogic() {
+//        every 2 row initial random num 1 in the matrix an the other is 0 (the num 1 will swap to an obstacle)
         if(counter++ %2 == 0){
             Random r = new Random();
             vals_matrix_loc[0][r.nextInt(vals_matrix_loc[0].length)] =1 ;
@@ -208,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+//                every 1 in the matrix swap to an obstacl and mak sure the player is in the place
                 for (int i = 0; i < panel_img_obstacle.length; i++) {
                     for (int j = 0; j < panel_img_obstacle[i].length; j++) {
                         ImageView im = panel_img_obstacle[i][j];
@@ -239,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void moveForward() {
+//        move the obstacle down
         for (int i = vals_matrix_loc.length - 1; i >= 0; i--) {
             for (int j = 0; j < vals_matrix_loc[i].length; j++){
                 if(i > 0){
