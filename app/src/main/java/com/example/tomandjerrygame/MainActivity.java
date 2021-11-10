@@ -1,7 +1,6 @@
 package com.example.tomandjerrygame;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,13 +36,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         findViews();
-        for (int i = 0; i < vals_matrix_loc.length; i++) {
-            for (int j = 0; j < vals_matrix_loc[i].length; j++) {
-                vals_matrix_loc[i][j] = 0;
-            }
-        }
+        initialMatrix();
         initViews();
-
         timerRunnable = () -> {
             if(flag == true){
                 updateClockView();
@@ -54,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
                 panel_img_background.setImageResource(R.drawable.img_game_over);
             }
         };
+    }
+
+    private void initialMatrix() {
+        for (int i = 0; i < vals_matrix_loc.length; i++) {
+            for (int j = 0; j < vals_matrix_loc[i].length; j++) {
+                vals_matrix_loc[i][j] = 0;
+            }
+        }
     }
 
     private void cleanUI() {
