@@ -151,7 +151,9 @@ public class MainActivity extends AppCompatActivity {
                     panel_img_player[playerPosition].setVisibility(View.VISIBLE);
                     if(j != 0 ){
                         Toast.makeText(MainActivity.this, "HIT!", Toast.LENGTH_SHORT).show();
+
                     }else {
+                        Toast.makeText(MainActivity.this, "HIT!", Toast.LENGTH_SHORT).show();
                         Toast.makeText(MainActivity.this, "Game Over", Toast.LENGTH_SHORT).show();
                         flag = false;
                     }
