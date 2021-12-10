@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Activity_Summary extends AppCompatActivity {
+public class Activity_Top extends AppCompatActivity {
 
     public static final String NAME = "NAME";
     public static final String GENDER = "GENDER";
@@ -13,7 +13,7 @@ public class Activity_Summary extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_summary);
+        setContentView(R.layout.activity_top);
 
         String name = getIntent().getStringExtra(NAME);
         String gender = getIntent().getStringExtra(GENDER);

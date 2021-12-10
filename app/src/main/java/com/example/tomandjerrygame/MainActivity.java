@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,6 +35,16 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayer moveSound;
     private MediaPlayer crashSound;
     private MediaPlayer coinSound;
+    private int flagReg = 1;
+    private double lat, lng;
+    private String name;
+
+
+    private Bundle bundle;
+    public static final String FLAGREG = "FLAGREG";
+    public static final String NAME = "NAME";
+    public static final String LAT = "LAT";
+    public static final String LNG = "LNG";
 
 
 
@@ -42,10 +53,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        unboxingBoundle();
         findViews();
         initialMatrix();
-        initViews();
+        if (flagReg == 1)
+            initViews();
+        else{
+            btn_left.setVisibility(View.INVISIBLE);
+            btn_right.setVisibility(View.INVISIBLE);
+            initViewsSens();
+        }
+
         timerRunnable = () -> {
             if(flag == true){
                 updateClockView();
@@ -57,6 +75,21 @@ public class MainActivity extends AppCompatActivity {
             }
         };
     }
+
+    private void initViewsSens() {
+
+
+    }
+
+    private void unboxingBoundle() {
+        bundle = getIntent().getExtras();
+        flagReg = bundle.getInt(FLAGREG);
+        Log.d("ppppt","" + flagReg);
+        name = bundle.getString(NAME);
+        lat = bundle.getDouble(LAT);
+        lng = bundle.getDouble(LNG);
+    }
+
 
     private void initialMatrix() {
 //        initial the matrix to 0
@@ -83,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViews() {
 //        remove the player
+        moveSound.start();
         btn_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
         btn_left = findViewById(R.id.panel_btn_left);
         btn_right = findViewById(R.id.panel_btn_right);
 
-        duaration = findViewById(R.id.duaration);
+        duaration = findViewById(R.id.panel_txt_duaration);
         moveSound =  MediaPlayer.create(this,R.raw.move_sound);
         crashSound = MediaPlayer.create(this,R.raw.crash);
         coinSound = MediaPlayer.create(this,R.raw.coin);
