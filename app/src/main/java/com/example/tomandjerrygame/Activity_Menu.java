@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class Activity_Menu extends AppCompatActivity {
-    private int flagReg = 1; //1 - regular , 0 - sens
+    private boolean flagReg = true;
     private double lat, lng;
     private FusedLocationProviderClient fusedLocationProviderClient;
     public static final String BUNDLE = "BUNDLE";
@@ -144,14 +144,12 @@ public class Activity_Menu extends AppCompatActivity {
 
     private Bundle initBundleData(String sns) {
         Bundle bundle = new Bundle();
-        if(sns.equals("sensor"))
-            flagReg = 0;
-        bundle.putInt(MainActivity.FLAGREG , flagReg);
-        bundle.putString(MainActivity.NAME , String.valueOf(menu_ET_name.getText()));
-        bundle.putDouble(MainActivity.LAT , lat);
-        bundle.putDouble(MainActivity.LAT , lng);
+        if (sns.equals("sensor"))
+            flagReg = false;
+        bundle.putBoolean(MainActivity.FLAGREG, flagReg);
+        bundle.putString(MainActivity.NAME, String.valueOf(menu_ET_name.getText()));
+        bundle.putDouble(MainActivity.LAT, lat);
+        bundle.putDouble(MainActivity.LAT, lng);
         return bundle;
-    }
-
-
+        }
 }

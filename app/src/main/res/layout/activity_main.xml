@@ -440,25 +440,6 @@
                 android:layout_marginLeft="100dp"
                 tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"/>
 
-
-
-            <!--            <ImageButton-->
-            <!--                android:id="@+id/panel_BTN_left"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_gravity="bottom"-->
-            <!--                android:layout_weight="1"-->
-            <!--                android:src="@drawable/btn_left"-->
-            <!--                tools:ignore="SpeakableTextPresentCheck" />-->
-
-            <!--            <ImageButton-->
-            <!--                android:id="@+id/panel_BTN_right"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_gravity="bottom"-->
-            <!--                android:layout_weight="1"-->
-            <!--                android:src="@drawable/btn_right"-->
-            <!--                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />-->
         </LinearLayout>
 
     </LinearLayout>

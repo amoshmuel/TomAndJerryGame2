@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayer moveSound;
     private MediaPlayer crashSound;
     private MediaPlayer coinSound;
-    private int flagReg = 1;
+    private boolean flagReg = true;
     private double lat, lng;
     private String name;
 
@@ -55,15 +55,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         unboxingBoundle();
         findViews();
-        initialMatrix();
-        if (flagReg == 1)
+        if (flagReg){
             initViews();
-        else{
+        }else{
             btn_left.setVisibility(View.INVISIBLE);
             btn_right.setVisibility(View.INVISIBLE);
             initViewsSens();
         }
 
+
+        initialMatrix();
         timerRunnable = () -> {
             if(flag == true){
                 updateClockView();
@@ -82,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void unboxingBoundle() {
-        bundle = getIntent().getExtras();
-        flagReg = bundle.getInt(FLAGREG);
+        bundle = getIntent().getExtras().getBundle("Bundle");
+        flagReg = bundle.getBoolean(FLAGREG);
         Log.d("ppppt","" + flagReg);
         name = bundle.getString(NAME);
         lat = bundle.getDouble(LAT);
