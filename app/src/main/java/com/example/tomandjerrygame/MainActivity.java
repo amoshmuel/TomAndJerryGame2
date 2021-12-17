@@ -1,6 +1,9 @@
 package com.example.tomandjerrygame;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.Random;
 
+
 public class MainActivity extends AppCompatActivity {
     private ImageView[][] panel_img_obstacle;
     private int[][] vals_matrix_loc;
@@ -23,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton btn_left;
     private ImageButton btn_right;
     private int  playerPosition =2;
-    private final int DELAY = 1000;
+    private int delay = 1000;
     private final Handler handler = new Handler();
     private Runnable timerRunnable;
     private final int VIBRATE_TIME = 500;
@@ -38,13 +42,15 @@ public class MainActivity extends AppCompatActivity {
     private boolean flagReg = true;
     private double lat, lng;
     private String name;
+    private int speed;
+    private SensorManager sensorManager;
+    private Sensor moveSensor;
+//    private SensorEvent sensorEvent;
+
 
 
     private Bundle bundle;
-    public static final String FLAGREG = "FLAGREG";
-    public static final String NAME = "NAME";
-    public static final String LAT = "LAT";
-    public static final String LNG = "LNG";
+
 
 
 
@@ -63,13 +69,13 @@ public class MainActivity extends AppCompatActivity {
             initViewsSens();
         }
 
-        
+
 
         initialMatrix();
         timerRunnable = () -> {
             if(flag == true){
                 updateClockView();
-                handler.postDelayed(timerRunnable, DELAY);
+                handler.postDelayed(timerRunnable, delay);
             }else{
                 stopTicker();
                 cleanUI();
@@ -80,16 +86,80 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViewsSens() {
 
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        moveSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    }
+
+    private void whereToMove(int direction){
+        //direction = 1 move righr, direction = -1 move left
+        if(direction == 1){
+            if (playerPosition == 0) {//player on the left move to left mid
+                setVisibleFromTo(panel_img_player,0,1);
+
+            } else if (playerPosition == 1) {//player on the left mid move to mid
+                setVisibleFromTo(panel_img_player,1,2);
+
+            } else if (playerPosition == 2) { //player on the mid move to right mid
+                setVisibleFromTo(panel_img_player,2,3);
+
+            } else if (playerPosition == 3) { //player on the right mid move to right
+                setVisibleFromTo(panel_img_player,3,4);
+
+            }else if (playerPosition == 4) { //player on the right move cant move
+                setVisibleFromTo(panel_img_player,4,4);
+            }
+        }else if(direction == -1){
+            if (playerPosition == 4) {//player on the right move to right mid
+                setVisibleFromTo(panel_img_player,4,3);
+
+            } else if (playerPosition == 3) {//player on the right mid move to mid
+                setVisibleFromTo(panel_img_player,3,2);
+
+            } else if (playerPosition == 2) { //player on the mid move to left mid
+                setVisibleFromTo(panel_img_player,2,1);
+            }
+
+            else if (playerPosition == 1) { //player on the  lrft mid move to left
+                setVisibleFromTo(panel_img_player,1,0);
+            }
+
+            else if (playerPosition == 0) { //player on the left cant move
+                setVisibleFromTo(panel_img_player,0,0);
+            }
+        }
+    }
+
+    private void onSensorChanged(SensorEvent sensorEvent) {
+        Log.d("ppp","im here");
+        moveSound.start();
+        float x = sensorEvent.values[0];
+        float y = sensorEvent.values[1];
+
+        if ( x < -3 ){
+            whereToMove(1);
+
+        } else if ( x > 3 ) {
+            whereToMove(-1);
+        }
+
+        if ( y < -3 ){
+            if(delay >250)
+                delay -= 250;
+        } else if ( y > 3 ) {
+            if(delay < 200)
+                delay +=250;
+        }
+
 
     }
 
     private void unboxingBoundle() {
         bundle = getIntent().getExtras().getBundle("Bundle");
-        flagReg = bundle.getBoolean(FLAGREG);
+        flagReg = bundle.getBoolean(Flags.getFLAGREG());
         Log.d("ppppt","" + flagReg);
-        name = bundle.getString(NAME);
-        lat = bundle.getDouble(LAT);
-        lng = bundle.getDouble(LNG);
+        name = bundle.getString(Flags.getNAME());
+        lat = bundle.getDouble(Flags.getLAT());
+        lng = bundle.getDouble(Flags.getLNG());
     }
 
 
@@ -119,47 +189,21 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
 //        remove the player
         moveSound.start();
+        btnMoveListener();
+    }
+
+    private void btnMoveListener() {
         btn_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (playerPosition == 0) {//player on the left move to left mid
-                    setVisibleFromTo(panel_img_player,0,1);
-
-                } else if (playerPosition == 1) {//player on the left mid move to mid
-                    setVisibleFromTo(panel_img_player,1,2);
-
-                } else if (playerPosition == 2) { //player on the mid move to right mid
-                    setVisibleFromTo(panel_img_player,2,3);
-
-                } else if (playerPosition == 3) { //player on the right mid move to right
-                    setVisibleFromTo(panel_img_player,3,4);
-
-                }else if (playerPosition == 4) { //player on the right move cant move
-                    setVisibleFromTo(panel_img_player,4,4);
-                }
+                whereToMove(1);
             }
         });
 
         btn_left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (playerPosition == 4) {//player on the right move to right mid
-                    setVisibleFromTo(panel_img_player,4,3);
-
-                } else if (playerPosition == 3) {//player on the right mid move to mid
-                    setVisibleFromTo(panel_img_player,3,2);
-
-                } else if (playerPosition == 2) { //player on the mid move to left mid
-                    setVisibleFromTo(panel_img_player,2,1);
-                }
-
-                else if (playerPosition == 1) { //player on the  lrft mid move to left
-                    setVisibleFromTo(panel_img_player,1,0);
-                }
-
-                else if (playerPosition == 0) { //player on the left cant move
-                    setVisibleFromTo(panel_img_player,0,0);
-                }
+                whereToMove(-1);
             }
         });
     }
@@ -317,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startTicker() {
-        handler.postDelayed(timerRunnable, DELAY);
+        handler.postDelayed(timerRunnable, delay);
     }
 
     private void updateClockView() {

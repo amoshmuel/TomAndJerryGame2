@@ -146,10 +146,10 @@ public class Activity_Menu extends AppCompatActivity {
         Bundle bundle = new Bundle();
         if (sns.equals("sensor"))
             flagReg = false;
-        bundle.putBoolean(MainActivity.FLAGREG, flagReg);
-        bundle.putString(MainActivity.NAME, String.valueOf(menu_ET_name.getText()));
-        bundle.putDouble(MainActivity.LAT, lat);
-        bundle.putDouble(MainActivity.LAT, lng);
+        bundle.putBoolean(Flags.getFLAGREG(), flagReg);
+        bundle.putString(Flags.getNAME(), String.valueOf(menu_ET_name.getText()));
+        bundle.putDouble(Flags.getLAT(), lat);
+        bundle.putDouble(Flags.getLNG(), lng);
         return bundle;
         }
 }
