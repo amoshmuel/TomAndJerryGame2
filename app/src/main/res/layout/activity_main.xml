@@ -412,35 +412,14 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/panel_frm_controller"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/panel_btn_left"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="left"
-                android:background="@drawable/left_btn"
-                android:layout_marginRight="100dp"
-                android:layout_marginLeft="10dp"
-                tools:ignore="SpeakableTextPresentCheck"/>
+        </FrameLayout>
 
-            <ImageButton
-                android:id="@+id/panel_btn_right"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="right"
-                android:background="@drawable/right_btn"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="100dp"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"/>
 
-        </LinearLayout>
 
     </LinearLayout>
 </RelativeLayout>

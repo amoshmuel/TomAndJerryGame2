@@ -1,8 +1,9 @@
 package com.example.tomandjerrygame;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import android.content.Context;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private int speed;
     private SensorManager sensorManager;
     private Sensor moveSensor;
-//    private SensorEvent sensorEvent;
+//    private SensorEvent sensorEvent = null;
 
 
 
@@ -60,17 +61,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         unboxingBoundle();
-        findViews();
+        CallBack_MovePlayer cb = new CallBack_MovePlayer() {
+            @Override
+            public void movePlayer(int direction) {
+                whereToMove(direction);
+            }
+
+            @Override
+            public void gameSpeed(int speed) {
+                delay = speed;
+            }
+        };
         if (flagReg){
-            initViews();
+            whichFrag(new Fragment_Buttons(),cb);
         }else{
-            btn_left.setVisibility(View.INVISIBLE);
-            btn_right.setVisibility(View.INVISIBLE);
-            initViewsSens();
+            whichFrag(new Fragment_ACC(),cb);
         }
-
-
-
+        findViews();
+        initViews();
         initialMatrix();
         timerRunnable = () -> {
             if(flag == true){
@@ -84,11 +92,28 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
+    private void whichFrag(GameController frag, CallBack_MovePlayer cb) {
+        frag.setActivity(this);
+        frag.setCallBackMovePlayer(cb);
+        getSupportFragmentManager().beginTransaction().add(R.id.panel_frm_controller, (Fragment) frag).commit();
+    }
+
     private void initViewsSens() {
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         moveSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//        onSensorChanged(sensorEvent);
     }
+
+    private void changeMove() {
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        moveSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//        onSensorChanged(sensorEvent);
+    }
+
+
+
 
     private void whereToMove(int direction){
         //direction = 1 move righr, direction = -1 move left
@@ -129,29 +154,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void onSensorChanged(SensorEvent sensorEvent) {
-        Log.d("ppp","im here");
-        moveSound.start();
-        float x = sensorEvent.values[0];
-        float y = sensorEvent.values[1];
 
-        if ( x < -3 ){
-            whereToMove(1);
-
-        } else if ( x > 3 ) {
-            whereToMove(-1);
-        }
-
-        if ( y < -3 ){
-            if(delay >250)
-                delay -= 250;
-        } else if ( y > 3 ) {
-            if(delay < 200)
-                delay +=250;
-        }
-
-
-    }
 
     private void unboxingBoundle() {
         bundle = getIntent().getExtras().getBundle("Bundle");
@@ -189,24 +192,24 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
 //        remove the player
         moveSound.start();
-        btnMoveListener();
+//        btnMoveListener();
     }
 
-    private void btnMoveListener() {
-        btn_right.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                whereToMove(1);
-            }
-        });
-
-        btn_left.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                whereToMove(-1);
-            }
-        });
-    }
+//    private void btnMoveListener() {
+//        btn_right.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                whereToMove(1);
+//            }
+//        });
+//
+//        btn_left.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                whereToMove(-1);
+//            }
+//        });
+//    }
 
     private void setVisibleFromTo(ImageView [] player ,int from, int to) {
 //        move the player from current location to new location
@@ -242,8 +245,8 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.panel_img_chesse2),
                 findViewById(R.id.panel_img_chesse3)
         };
-        btn_left = findViewById(R.id.panel_btn_left);
-        btn_right = findViewById(R.id.panel_btn_right);
+//        btn_left = findViewById(R.id.panel_btn_left);
+//        btn_right = findViewById(R.id.panel_btn_right);
 
         duaration = findViewById(R.id.panel_txt_duaration);
         moveSound =  MediaPlayer.create(this,R.raw.move_sound);
