@@ -1,5 +1,5 @@
 package com.example.tomandjerrygame;
 
-public interface CallBack_GPS {
+public interface CallBackGPS {
     void getLocation(double lat,  double lon);
 }

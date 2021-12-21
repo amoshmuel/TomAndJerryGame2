@@ -1,5 +1,5 @@
 package com.example.tomandjerrygame;
 
-public interface CallBack_List {
+public interface CallBackList {
     void rowSelected(int index);
 }

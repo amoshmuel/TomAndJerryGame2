@@ -1,6 +1,6 @@
 package com.example.tomandjerrygame;
 
-public interface CallBack_MovePlayer {
+public interface CallBackMovePlayer {
     void movePlayer(int direction);
-    void gameSpeed(int speed);
+    void delayGame(int delay);
 }

@@ -6,5 +6,5 @@ public interface CallBackChanges {
 
     void setActivity(AppCompatActivity activity);
 
-    void setCallBackMovePlayer(CallBack_MovePlayer cb);
+    void setCallBackMovePlayer(CallBackMovePlayer cb);
 }

@@ -9,10 +9,10 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-public class Fragment_Buttons extends Fragment implements GameController {
+public class FragBtn extends Fragment implements GameController {
 
 
-    private CallBack_MovePlayer callBackMovePlayer;
+    private CallBackMovePlayer callBackMovePlayer;
     private ImageButton panel_BTN_left ;
     private ImageButton panel_BTN_right;
 
@@ -41,7 +41,7 @@ public class Fragment_Buttons extends Fragment implements GameController {
     }
 
     @Override
-    public void setCallBackMovePlayer(CallBack_MovePlayer callBackMovePlayer) {
+    public void setCallBackMovePlayer(CallBackMovePlayer callBackMovePlayer) {
         this.callBackMovePlayer = callBackMovePlayer;
     }
 }

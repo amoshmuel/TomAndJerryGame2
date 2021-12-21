@@ -17,7 +17,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -28,12 +27,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class Activity_Menu extends AppCompatActivity {
+public class ActivityMenu extends AppCompatActivity {
     private boolean flagReg = true;
     private double lat, lng;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    public static final String BUNDLE = "BUNDLE";
-    private Bundle bundle;
     private EditText menu_ET_name;
     private MediaPlayer startGame;
     private Button menu_BTN_sensor;
@@ -50,11 +47,11 @@ public class Activity_Menu extends AppCompatActivity {
 
 
         // Check location permission
-        if (ActivityCompat.checkSelfPermission(Activity_Menu.this,
+        if (ActivityCompat.checkSelfPermission(ActivityMenu.this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             getCurrentLocation();
         } else {
-            ActivityCompat.requestPermissions(Activity_Menu.this,
+            ActivityCompat.requestPermissions(ActivityMenu.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
         }
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -74,7 +71,7 @@ public class Activity_Menu extends AppCompatActivity {
 
                     if (location != null) {
                         try {
-                            Geocoder geocoder = new Geocoder(Activity_Menu.this,
+                            Geocoder geocoder = new Geocoder(ActivityMenu.this,
                                     Locale.getDefault());
                             List<Address> addressList = geocoder.getFromLocation(
                                     location.getLatitude(), location.getLongitude(), 1
@@ -94,7 +91,7 @@ public class Activity_Menu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if("".equals(menu_ET_name.getText().toString()))
-                    Toast.makeText(Activity_Menu.this, "Must enter name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityMenu.this, "Must enter name", Toast.LENGTH_SHORT).show();
                 else
                     startGame("sensor");
 
@@ -105,7 +102,7 @@ public class Activity_Menu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if("".equals(menu_ET_name.getText().toString()))
-                    Toast.makeText(Activity_Menu.this, "Must enter name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityMenu.this, "Must enter name", Toast.LENGTH_SHORT).show();
                 else
                     startGame("regular");
 
@@ -135,11 +132,11 @@ public class Activity_Menu extends AppCompatActivity {
         Intent myIntent = new Intent();
         Bundle bundle = initBundleData(sns);
         if(sns.equals("top")){
-            myIntent = new Intent(this,Activity_Top.class);
+            myIntent = new Intent(this, ActivityTop.class);
         }else if(sns.equals("sensor") || sns.equals("regular")){
-            myIntent = new Intent(this,MainActivity.class);
+            myIntent = new Intent(this, ActivityMain.class);
         }
-        myIntent.putExtra("Bundle", bundle);
+        myIntent.putExtra(Flags.BUNDLE, bundle);
         startActivity(myIntent);
     }
 

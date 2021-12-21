@@ -15,22 +15,22 @@ import androidx.fragment.app.Fragment;
 
 
 
-public class Fragment_ACC extends Fragment implements GameController {
+public class FragAcc extends Fragment implements GameController {
     private int delay = 1000;
     private AppCompatActivity activity;
-    private CallBack_MovePlayer callBackMovePlayer;
+    private CallBackMovePlayer callBackMovePlayer;
     private SensorManager sensorManager;
     private Sensor accSensor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_acc, container, false);
-        initACC();
+        initAcc();
         return view;
     }
 
 
-    private void initACC() {
+    private void initAcc() {
         sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
@@ -42,20 +42,20 @@ public class Fragment_ACC extends Fragment implements GameController {
             float y = event.values[1];
 
             if (x < -3) {
-                callBackMovePlayer.movePlayer(1);
+                callBackMovePlayer.movePlayer(Flags.RIGHT);
             } else if (x > 3) {
-                callBackMovePlayer.movePlayer(-1);
+                callBackMovePlayer.movePlayer(Flags.LEFT);
             }
 
 
             if (y < -3) {
-                if (delay > 250)
-                    delay -= 250;
-                callBackMovePlayer.gameSpeed(delay);
+                if (delay > Flags.FASTERPEED)
+                    delay -= Flags.CHANGESPEED;
+                callBackMovePlayer.delayGame(delay);
             } else if (y > 3) {
-                if (delay < 2000)
-                    delay += 250;
-                callBackMovePlayer.gameSpeed(delay);
+                if (delay < Flags.SLOWERSPEED)
+                    delay += Flags.CHANGESPEED;
+                callBackMovePlayer.delayGame(delay);
             }
         }
         @Override
@@ -83,7 +83,7 @@ public class Fragment_ACC extends Fragment implements GameController {
     }
 
     @Override
-    public void setCallBackMovePlayer(CallBack_MovePlayer callBackMovePlayer) {
+    public void setCallBackMovePlayer(CallBackMovePlayer callBackMovePlayer) {
         this.callBackMovePlayer = callBackMovePlayer;
     }
 }

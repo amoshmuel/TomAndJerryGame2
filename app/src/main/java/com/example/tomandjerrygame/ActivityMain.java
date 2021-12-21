@@ -3,30 +3,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.Random;
 
 
-public class MainActivity extends AppCompatActivity {
+public class ActivityMain extends AppCompatActivity {
     private ImageView[][] panel_img_obstacle;
     private int[][] vals_matrix_loc;
     private ImageView [] panel_img_player;
     private ImageView [] panel_img_live;
-    private ImageButton btn_left;
-    private ImageButton btn_right;
     private int  playerPosition =2;
     private int delay = 1000;
     private final Handler handler = new Handler();
@@ -41,18 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayer crashSound;
     private MediaPlayer coinSound;
     private boolean flagReg = true;
-    private double lat, lng;
-    private String name;
-    private int speed;
-    private SensorManager sensorManager;
-    private Sensor moveSensor;
-//    private SensorEvent sensorEvent = null;
-
-
 
     private Bundle bundle;
-
-
+    private Fragment fr;
 
 
 
@@ -61,25 +47,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         unboxingBoundle();
-        CallBack_MovePlayer cb = new CallBack_MovePlayer() {
+
+        CallBackMovePlayer callBackMvP = new CallBackMovePlayer() {
             @Override
             public void movePlayer(int direction) {
-                whereToMove(direction);
+                setVisibleFromTo(panel_img_player,playerPosition,playerPosition+direction);
             }
-
             @Override
-            public void gameSpeed(int speed) {
-                delay = speed;
+            public void delayGame(int delay) {
+                ActivityMain.this.delay = delay;
             }
         };
-        if (flagReg){
-            whichFrag(new Fragment_Buttons(),cb);
-        }else{
-            whichFrag(new Fragment_ACC(),cb);
-        }
+
+        sensorOrBtn(callBackMvP);
         findViews();
-        initViews();
+        moveSound.start();
         initialMatrix();
+
         timerRunnable = () -> {
             if(flag == true){
                 updateClockView();
@@ -87,84 +71,32 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 stopTicker();
                 cleanUI();
-                panel_img_background.setImageResource(R.drawable.img_game_over);
+                bundle.putLong(Flags.SCORE, duarationCounter);
+                Intent myIntent = new Intent(this, ActivityTop.class);
+                myIntent.putExtra(Flags.BUNDLE, bundle);
+                startActivity(myIntent);
             }
         };
     }
 
-    private void whichFrag(GameController frag, CallBack_MovePlayer cb) {
+    private void sensorOrBtn(CallBackMovePlayer callBackMvP) {
+        if (flagReg){
+            whichFrag(new FragBtn(),callBackMvP);
+        }else{
+            whichFrag(new FragAcc(),callBackMvP);
+        }
+    }
+
+    private void whichFrag(GameController frag, CallBackMovePlayer cb) {
         frag.setActivity(this);
         frag.setCallBackMovePlayer(cb);
         getSupportFragmentManager().beginTransaction().add(R.id.panel_frm_controller, (Fragment) frag).commit();
     }
 
-    private void initViewsSens() {
-
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        moveSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-//        onSensorChanged(sensorEvent);
-    }
-
-    private void changeMove() {
-
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        moveSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-//        onSensorChanged(sensorEvent);
-    }
-
-
-
-
-    private void whereToMove(int direction){
-        //direction = 1 move righr, direction = -1 move left
-        if(direction == 1){
-            if (playerPosition == 0) {//player on the left move to left mid
-                setVisibleFromTo(panel_img_player,0,1);
-
-            } else if (playerPosition == 1) {//player on the left mid move to mid
-                setVisibleFromTo(panel_img_player,1,2);
-
-            } else if (playerPosition == 2) { //player on the mid move to right mid
-                setVisibleFromTo(panel_img_player,2,3);
-
-            } else if (playerPosition == 3) { //player on the right mid move to right
-                setVisibleFromTo(panel_img_player,3,4);
-
-            }else if (playerPosition == 4) { //player on the right move cant move
-                setVisibleFromTo(panel_img_player,4,4);
-            }
-        }else if(direction == -1){
-            if (playerPosition == 4) {//player on the right move to right mid
-                setVisibleFromTo(panel_img_player,4,3);
-
-            } else if (playerPosition == 3) {//player on the right mid move to mid
-                setVisibleFromTo(panel_img_player,3,2);
-
-            } else if (playerPosition == 2) { //player on the mid move to left mid
-                setVisibleFromTo(panel_img_player,2,1);
-            }
-
-            else if (playerPosition == 1) { //player on the  lrft mid move to left
-                setVisibleFromTo(panel_img_player,1,0);
-            }
-
-            else if (playerPosition == 0) { //player on the left cant move
-                setVisibleFromTo(panel_img_player,0,0);
-            }
-        }
-    }
-
-
-
     private void unboxingBoundle() {
-        bundle = getIntent().getExtras().getBundle("Bundle");
+        bundle = getIntent().getExtras().getBundle(Flags.BUNDLE);
         flagReg = bundle.getBoolean(Flags.getFLAGREG());
-        Log.d("ppppt","" + flagReg);
-        name = bundle.getString(Flags.getNAME());
-        lat = bundle.getDouble(Flags.getLAT());
-        lng = bundle.getDouble(Flags.getLNG());
     }
-
 
     private void initialMatrix() {
 //        initial the matrix to 0
@@ -183,36 +115,13 @@ public class MainActivity extends AppCompatActivity {
                     panel_img_obstacle[i][j].setVisibility(View.INVISIBLE);
             }
         }
-        btn_left.setVisibility(View.INVISIBLE);
-        btn_right.setVisibility(View.INVISIBLE);
         panel_img_player[playerPosition].setVisibility(View.INVISIBLE);
     }
 
-
-    private void initViews() {
-//        remove the player
-        moveSound.start();
-//        btnMoveListener();
-    }
-
-//    private void btnMoveListener() {
-//        btn_right.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                whereToMove(1);
-//            }
-//        });
-//
-//        btn_left.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                whereToMove(-1);
-//            }
-//        });
-//    }
-
     private void setVisibleFromTo(ImageView [] player ,int from, int to) {
 //        move the player from current location to new location
+        if (to>4 || to < 0)
+            to = from;
         if(to != from){
             player[from].setVisibility(View.INVISIBLE);
         }
@@ -245,8 +154,6 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.panel_img_chesse2),
                 findViewById(R.id.panel_img_chesse3)
         };
-//        btn_left = findViewById(R.id.panel_btn_left);
-//        btn_right = findViewById(R.id.panel_btn_right);
 
         duaration = findViewById(R.id.panel_txt_duaration);
         moveSound =  MediaPlayer.create(this,R.raw.move_sound);
@@ -264,14 +171,14 @@ public class MainActivity extends AppCompatActivity {
             for (int j = panel_img_live.length - 1; j >= 0; j--) {
                 if(panel_img_live[j].getVisibility() == View.VISIBLE){
                     panel_img_live[j].setVisibility(View.INVISIBLE);
-                    panel_img_player[playerPosition].setImageResource(R.drawable.img_jerry_angry);
-                    panel_img_player[playerPosition].setVisibility(View.VISIBLE);
+//                    panel_img_player[playerPosition].setImageResource(R.drawable.img_jerry_angry);
+//                    panel_img_player[playerPosition].setVisibility(View.VISIBLE);
                     crashSound.start();
                     if(j != 0 ){
-                        Toast.makeText(MainActivity.this, "HIT!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ActivityMain.this, "HIT!", Toast.LENGTH_SHORT).show();
                     }else {
-                        Toast.makeText(MainActivity.this, "HIT!", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(MainActivity.this, "Game Over", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ActivityMain.this, "HIT!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ActivityMain.this, "Game Over", Toast.LENGTH_SHORT).show();
                         flag = false;
                     }
                     vibrate(VIBRATE_TIME);
@@ -281,13 +188,11 @@ public class MainActivity extends AppCompatActivity {
         }else if (vals_matrix_loc[vals_matrix_loc.length- 1][playerPosition] == 2 ){
             coinSound.start();
             duarationCounter+=300;
-            Toast.makeText(MainActivity.this, "EXCELLENT", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ActivityMain.this, "EXCELLENT", Toast.LENGTH_SHORT).show();
             vibrate(VIBRATE_TIME);
             return;
         }
     }
-
-
 
     private void vibrate(int timer) {
 //        making vibrate after hit
@@ -311,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
             if (coinRandom >= obstacleRandom) {
                 coinRandom += 1;
             }
-
             vals_matrix_loc[0][coinRandom] =2;
         }else {
             for (int j = 0; j < vals_matrix_loc[0].length; j++) {
@@ -344,19 +248,19 @@ public class MainActivity extends AppCompatActivity {
 //                every '1' in the matrix swap to an obstacl and make sure the player is in the place
                 for (int i = 0; i < panel_img_obstacle.length; i++) {
                     for (int j = 0; j < panel_img_obstacle[i].length; j++) {
-                        ImageView im = panel_img_obstacle[i][j];
                         if(vals_matrix_loc[i][j] == 0){
                             panel_img_obstacle[i][j].setVisibility(View.INVISIBLE);
-                            setVisibleFromTo(panel_img_player,playerPosition,playerPosition);
+//                            setVisibleFromTo(panel_img_player,playerPosition,playerPosition);
                         }else if (vals_matrix_loc[i][j] == 1){
                             panel_img_obstacle[i][j].setVisibility(View.VISIBLE);
                             panel_img_obstacle[i][j].setImageResource(R.drawable.img_tom);
-                            setVisibleFromTo(panel_img_player,playerPosition,playerPosition);
+//                            setVisibleFromTo(panel_img_player,playerPosition,playerPosition);
                         }else if (vals_matrix_loc[i][j] == 2){
                             panel_img_obstacle[i][j].setImageResource(R.drawable.coin_img);
                             panel_img_obstacle[i][j].setVisibility(View.VISIBLE);
-                            setVisibleFromTo(panel_img_player,playerPosition,playerPosition);
+//                            setVisibleFromTo(panel_img_player,playerPosition,playerPosition);
                         }
+                        setVisibleFromTo(panel_img_player,playerPosition,playerPosition);
                     }
                 }
             }
