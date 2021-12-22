@@ -1,4 +1,4 @@
-package com.example.tomandjerrygame;
+package com.example.tomandjerrygame.Activity;
 
 import android.animation.Animator;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
+
+import com.example.tomandjerrygame.R;
 
 public class ActivitySplash extends AppCompatActivity {
 

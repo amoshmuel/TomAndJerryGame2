@@ -1,4 +1,4 @@
-package com.example.tomandjerrygame;
+package com.example.tomandjerrygame.DataBase;
 
 import android.content.Context;
 import android.content.SharedPreferences;

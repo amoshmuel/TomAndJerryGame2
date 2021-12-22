@@ -1,15 +1,24 @@
-package com.example.tomandjerrygame;
+package com.example.tomandjerrygame.Frag;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.tomandjerrygame.CallBack.CallBackList;
+import com.example.tomandjerrygame.Flags.Flags;
+import com.example.tomandjerrygame.DataBase.MSPV3;
+import com.example.tomandjerrygame.R;
+import com.example.tomandjerrygame.DataBase.Record;
+import com.example.tomandjerrygame.DataBase.RecordsDB;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+
 public class FragListTop extends Fragment {
+
 
     private CallBackList callBackList;
     private TextView[] names;
@@ -19,8 +28,6 @@ public class FragListTop extends Fragment {
         this.callBackList = callBackList;
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_frag_list_top, container, false);
@@ -29,17 +36,24 @@ public class FragListTop extends Fragment {
         return view;
     }
 
-
     private void initViews() {
         String js = MSPV3.getMe().getString(Flags.DATABASE, "");
-        RecordsDB db = new Gson().fromJson(js, RecordsDB.class);
-        ArrayList<Record> records = db.getAllRecords();
+        RecordsDB database = new Gson().fromJson(js, RecordsDB.class);
+        ArrayList<Record> records = database.getRecords();
         for (int i = 0; i < records.size(); i++) {
-            Record oneRec = records.get(i);
-            names[i].setText(i+1 + ": " + oneRec.getName());
-            scores[i].setText(oneRec.getScore());
+            Record record = records.get(i);
+            names[i].setText(i + 1 + ": " + record.getName());
+            scores[i].setText(""+record.getScore());
+            names[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callBackList.recordData(record.getName(),record.getScore(),record.getLat(),record.getLng());
+                }
+            });
+
         }
     }
+
 
     private void findViews(View view) {
         names = new TextView[]{
@@ -69,4 +83,6 @@ public class FragListTop extends Fragment {
 
         };
     }
+
+
 }

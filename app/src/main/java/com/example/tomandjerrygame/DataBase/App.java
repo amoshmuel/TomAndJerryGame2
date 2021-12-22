@@ -1,7 +1,8 @@
-package com.example.tomandjerrygame;
+package com.example.tomandjerrygame.DataBase;
 
 import android.app.Application;
 
+import com.example.tomandjerrygame.Flags.Flags;
 import com.google.gson.Gson;
 
 

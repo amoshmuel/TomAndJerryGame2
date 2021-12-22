@@ -1,4 +1,4 @@
-package com.example.tomandjerrygame;
+package com.example.tomandjerrygame.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -14,6 +14,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.tomandjerrygame.CallBack.CallBackGameController;
+import com.example.tomandjerrygame.CallBack.CallBackMovePlayer;
+import com.example.tomandjerrygame.Flags.Flags;
+import com.example.tomandjerrygame.Frag.FragAcc;
+import com.example.tomandjerrygame.Frag.FragBtn;
+import com.example.tomandjerrygame.R;
+
 import java.util.Random;
 
 
@@ -26,20 +34,16 @@ public class ActivityMain extends AppCompatActivity {
     private int delay = 1000;
     private final Handler handler = new Handler();
     private Runnable timerRunnable;
-    private final int VIBRATE_TIME = 500;
     private int counter = 0;
     private boolean flag = true;
-    private ImageView panel_img_background;
     private TextView duaration;
     private int duarationCounter = 0;
     private MediaPlayer moveSound;
     private MediaPlayer crashSound;
     private MediaPlayer coinSound;
     private boolean flagReg = true;
-
     private Bundle bundle;
-    private Fragment fr;
-
+    private boolean crash;
 
 
     @Override
@@ -50,11 +54,11 @@ public class ActivityMain extends AppCompatActivity {
 
         CallBackMovePlayer callBackMvP = new CallBackMovePlayer() {
             @Override
-            public void movePlayer(int direction) {
-                setVisibleFromTo(panel_img_player,playerPosition,playerPosition+direction);
+            public void whereToMovePlayer(int direction) {
+                setVisibleFromTo(panel_img_player,playerPosition,playerPosition+direction,false);
             }
             @Override
-            public void delayGame(int delay) {
+            public void updateDelayGame(int delay) {
                 ActivityMain.this.delay = delay;
             }
         };
@@ -71,12 +75,21 @@ public class ActivityMain extends AppCompatActivity {
             }else{
                 stopTicker();
                 cleanUI();
-                bundle.putLong(Flags.SCORE, duarationCounter);
-                Intent myIntent = new Intent(this, ActivityTop.class);
-                myIntent.putExtra(Flags.BUNDLE, bundle);
-                startActivity(myIntent);
+                bundleScore();
+                openSaveName();
             }
         };
+    }
+
+    private void openSaveName() {
+        Intent myIntent = new Intent(this, ActivitySaveName.class);
+        myIntent.putExtra(Flags.BUNDLE, bundle);
+        startActivity(myIntent);
+        ActivityMain.this.finish();
+    }
+
+    private void bundleScore() {
+        bundle.putInt(Flags.SCORE, duarationCounter);
     }
 
     private void sensorOrBtn(CallBackMovePlayer callBackMvP) {
@@ -87,7 +100,7 @@ public class ActivityMain extends AppCompatActivity {
         }
     }
 
-    private void whichFrag(GameController frag, CallBackMovePlayer cb) {
+    private void whichFrag(CallBackGameController frag, CallBackMovePlayer cb) {
         frag.setActivity(this);
         frag.setCallBackMovePlayer(cb);
         getSupportFragmentManager().beginTransaction().add(R.id.panel_frm_controller, (Fragment) frag).commit();
@@ -95,7 +108,7 @@ public class ActivityMain extends AppCompatActivity {
 
     private void unboxingBoundle() {
         bundle = getIntent().getExtras().getBundle(Flags.BUNDLE);
-        flagReg = bundle.getBoolean(Flags.getFLAGREG());
+        flagReg = bundle.getBoolean(Flags.FLAGREG);
     }
 
     private void initialMatrix() {
@@ -118,21 +131,25 @@ public class ActivityMain extends AppCompatActivity {
         panel_img_player[playerPosition].setVisibility(View.INVISIBLE);
     }
 
-    private void setVisibleFromTo(ImageView [] player ,int from, int to) {
+    private void setVisibleFromTo(ImageView [] player ,int from, int to,boolean crash) {
 //        move the player from current location to new location
-        if (to>4 || to < 0)
-            to = from;
-        if(to != from){
-            player[from].setVisibility(View.INVISIBLE);
+        if (crash) { //if was crash - image of crash
+            player[playerPosition].setVisibility(View.VISIBLE);
+            player[playerPosition].setImageResource(R.drawable.nock_out_jerry);
+        } else {
+            if (to > 4 || to < 0)
+                to = from;
+            else if (to != from) {
+                player[from].setVisibility(View.INVISIBLE);
+            }
+            player[to].setImageResource(R.drawable.img_jerry);
+            player[to].setVisibility(View.VISIBLE);
+            playerPosition = to;
         }
-        player[to].setImageResource(R.drawable.img_jerry);
-        player[to].setVisibility(View.VISIBLE);
-        playerPosition = to;
     }
 
 
     private void findViews() {
-        panel_img_background = findViewById(R.id.img_back);
         panel_img_obstacle = new ImageView[][]{
                 {findViewById(R.id.panel_img_tom_00), findViewById(R.id.panel_img_tom_01), findViewById(R.id.panel_img_tom_02),findViewById(R.id.panel_img_tom_03),findViewById(R.id.panel_img_tom_04)},
                 {findViewById(R.id.panel_img_tom_10), findViewById(R.id.panel_img_tom_11), findViewById(R.id.panel_img_tom_12),findViewById(R.id.panel_img_tom_13),findViewById(R.id.panel_img_tom_14)},
@@ -163,7 +180,7 @@ public class ActivityMain extends AppCompatActivity {
     }
 
 
-    private void checkCrash() {
+    private boolean checkCrash() {
         //        check if was an object on the player postion.
         //        and remove the last cheese-live from the array.
         if(vals_matrix_loc[vals_matrix_loc.length- 1][playerPosition] == 1 ){
@@ -171,8 +188,6 @@ public class ActivityMain extends AppCompatActivity {
             for (int j = panel_img_live.length - 1; j >= 0; j--) {
                 if(panel_img_live[j].getVisibility() == View.VISIBLE){
                     panel_img_live[j].setVisibility(View.INVISIBLE);
-//                    panel_img_player[playerPosition].setImageResource(R.drawable.img_jerry_angry);
-//                    panel_img_player[playerPosition].setVisibility(View.VISIBLE);
                     crashSound.start();
                     if(j != 0 ){
                         Toast.makeText(ActivityMain.this, "HIT!", Toast.LENGTH_SHORT).show();
@@ -181,24 +196,25 @@ public class ActivityMain extends AppCompatActivity {
                         Toast.makeText(ActivityMain.this, "Game Over", Toast.LENGTH_SHORT).show();
                         flag = false;
                     }
-                    vibrate(VIBRATE_TIME);
-                    return;
+                    vibrate(Flags.VIBRATE_TIME);
+                    return true;
                 }
             }
         }else if (vals_matrix_loc[vals_matrix_loc.length- 1][playerPosition] == 2 ){
             coinSound.start();
             duarationCounter+=300;
             Toast.makeText(ActivityMain.this, "EXCELLENT", Toast.LENGTH_SHORT).show();
-            vibrate(VIBRATE_TIME);
-            return;
+            vibrate(Flags.VIBRATE_TIME);
+            return false;
         }
+        return false;
     }
 
     private void vibrate(int timer) {
 //        making vibrate after hit
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            v.vibrate(VibrationEffect.createOneShot(VIBRATE_TIME, VibrationEffect.DEFAULT_AMPLITUDE));
+            v.vibrate(VibrationEffect.createOneShot(Flags.VIBRATE_TIME, VibrationEffect.DEFAULT_AMPLITUDE));
         } else {
             v.vibrate(timer);
         }
@@ -241,7 +257,7 @@ public class ActivityMain extends AppCompatActivity {
         startTicker();
     }
 
-    private void updateUI() {
+    private void updateUI(boolean crash) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -260,7 +276,7 @@ public class ActivityMain extends AppCompatActivity {
                             panel_img_obstacle[i][j].setVisibility(View.VISIBLE);
 //                            setVisibleFromTo(panel_img_player,playerPosition,playerPosition);
                         }
-                        setVisibleFromTo(panel_img_player,playerPosition,playerPosition);
+                        setVisibleFromTo(panel_img_player,playerPosition,playerPosition,crash);
                     }
                 }
             }
@@ -274,9 +290,10 @@ public class ActivityMain extends AppCompatActivity {
     private void updateClockView() {
 //        every 2 sec check if was a crash, initial random 1 in the first row
 //        swap the 1 to an obstacle and move down the obstacle.
-        checkCrash();
+
+        crash = checkCrash();
         runlogic();
-        updateUI();
+        updateUI(crash);
         moveForward();
 
     }

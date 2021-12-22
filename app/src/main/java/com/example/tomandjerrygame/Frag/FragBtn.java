@@ -1,4 +1,4 @@
-package com.example.tomandjerrygame;
+package com.example.tomandjerrygame.Frag;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,12 +9,17 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-public class FragBtn extends Fragment implements GameController {
+import com.example.tomandjerrygame.CallBack.CallBackGameController;
+import com.example.tomandjerrygame.CallBack.CallBackMovePlayer;
+import com.example.tomandjerrygame.Flags.Flags;
+import com.example.tomandjerrygame.R;
+
+public class FragBtn extends Fragment implements CallBackGameController {
 
 
     private CallBackMovePlayer callBackMovePlayer;
-    private ImageButton panel_BTN_left ;
-    private ImageButton panel_BTN_right;
+    private ImageButton panelBtnLeft;
+    private ImageButton panelBtnRight;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -26,14 +31,14 @@ public class FragBtn extends Fragment implements GameController {
     }
 
     private void findButtonsView(View view) {
-        panel_BTN_left      = view.findViewById(R.id.panel_btn_left );
-        panel_BTN_right     = view.findViewById(R.id.panel_btn_right);
+        panelBtnLeft = view.findViewById(R.id.panel_btn_left );
+        panelBtnRight = view.findViewById(R.id.panel_btn_right);
     }
 
     private void initButtons() {
-        panel_BTN_left.setOnClickListener(v -> callBackMovePlayer.movePlayer(-1));
+        panelBtnLeft.setOnClickListener(v -> callBackMovePlayer.whereToMovePlayer(Flags.LEFT));
 
-        panel_BTN_right.setOnClickListener(v -> callBackMovePlayer.movePlayer(1));
+        panelBtnRight.setOnClickListener(v -> callBackMovePlayer.whereToMovePlayer(Flags.RIGHT));
     }
 
     @Override

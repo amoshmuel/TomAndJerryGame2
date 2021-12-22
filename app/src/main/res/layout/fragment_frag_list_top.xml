@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".FragListTop">
+    tools:context=".Frag.FragListTop">
 
 
     <LinearLayout
@@ -13,180 +13,222 @@
         android:orientation="horizontal">
 
 
-        <LinearLayout
-            android:id="@+id/panel_fl_top_name"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/panel_txt_nametitle"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="player name"
-                android:gravity="center"
-                android:textSize="35dp"/>
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/panel_fl_top_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/panel_txt_nametitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="player name"
+                            android:textColor="@color/white"
+                            android:textSize="35dp" />
 
 
-            <TextView
-                android:id="@+id/panel_txt_name1"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_name1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:gravity="center"
-                android:id="@+id/panel_txt_name2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_name2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_name3"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_name3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_name4"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_name4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_name5"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_name5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_name6"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_name6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_name7"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_name7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_name8"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_name8"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_name9"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25dp" />
+                        <TextView
+                            android:id="@+id/panel_txt_name9"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_name10"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:textSize="25dp" />
-        </LinearLayout>
+                        <TextView
+                            android:id="@+id/panel_txt_name10"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
+                    </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/panel_fl_top_score"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="2">
+                    <LinearLayout
+                        android:id="@+id/panel_fl_top_score"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/panel_txt_scoretitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="score"
-                android:textSize="35dp"
-                />
+                        <TextView
+                            android:id="@+id/panel_txt_scoretitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="score"
+                            android:textColor="@color/white"
+                            android:textSize="35dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_score1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_score1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_score2"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_score2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_score3"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_score3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_score4"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_score4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_score5"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_score5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_score6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_score6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_score7"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_score7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_score8"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_score8"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_score9"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_score9"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-            <TextView
-                android:id="@+id/panel_txt_score10"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"/>
+                        <TextView
+                            android:id="@+id/panel_txt_score10"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="25dp" />
 
-        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
     </LinearLayout>
 
 

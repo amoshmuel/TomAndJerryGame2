@@ -1,4 +1,4 @@
-package com.example.tomandjerrygame;
+package com.example.tomandjerrygame.Frag;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -13,9 +13,13 @@ import android.view.ViewGroup;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.tomandjerrygame.CallBack.CallBackGameController;
+import com.example.tomandjerrygame.CallBack.CallBackMovePlayer;
+import com.example.tomandjerrygame.Flags.Flags;
+import com.example.tomandjerrygame.R;
 
 
-public class FragAcc extends Fragment implements GameController {
+public class FragAcc extends Fragment implements CallBackGameController {
     private int delay = 1000;
     private AppCompatActivity activity;
     private CallBackMovePlayer callBackMovePlayer;
@@ -25,12 +29,12 @@ public class FragAcc extends Fragment implements GameController {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_acc, container, false);
-        initAcc();
+        initSensor();
         return view;
     }
 
 
-    private void initAcc() {
+    private void initSensor() {
         sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
@@ -41,21 +45,21 @@ public class FragAcc extends Fragment implements GameController {
             float x = event.values[0];
             float y = event.values[1];
 
-            if (x < -3) {
-                callBackMovePlayer.movePlayer(Flags.RIGHT);
-            } else if (x > 3) {
-                callBackMovePlayer.movePlayer(Flags.LEFT);
+            if (x < -4) {
+                callBackMovePlayer.whereToMovePlayer(Flags.RIGHT);
+            } else if (x > 4) {
+                callBackMovePlayer.whereToMovePlayer(Flags.LEFT);
             }
 
 
-            if (y < -3) {
+            if (y < -4) {
                 if (delay > Flags.FASTERPEED)
                     delay -= Flags.CHANGESPEED;
-                callBackMovePlayer.delayGame(delay);
-            } else if (y > 3) {
+                callBackMovePlayer.updateDelayGame(delay);
+            } else if (y > 4) {
                 if (delay < Flags.SLOWERSPEED)
                     delay += Flags.CHANGESPEED;
-                callBackMovePlayer.delayGame(delay);
+                callBackMovePlayer.updateDelayGame(delay);
             }
         }
         @Override

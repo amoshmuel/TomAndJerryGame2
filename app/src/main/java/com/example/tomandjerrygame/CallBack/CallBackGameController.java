@@ -1,8 +1,8 @@
-package com.example.tomandjerrygame;
+package com.example.tomandjerrygame.CallBack;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public interface GameController {
+public interface CallBackGameController {
 
     void setActivity(AppCompatActivity activity);
 
